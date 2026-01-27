@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+*.zip
+*.save
+*.txt
+*.command
+Project1.py
+main.py
+day6.py
+data.json
+migrar_dados.py
+criar_tabelas.py
+setup_db.py

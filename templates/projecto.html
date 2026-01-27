@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ projeto.title }} - Portefólio Inês</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary mb-4">← Voltar</a>
+        
+        <div class="row">
+            <div class="col-md-8">
+                {% if projeto.video_url %}
+                    <div class="ratio ratio-16x9">
+                        <iframe src="{{ projeto.video_url }}" allowfullscreen></iframe>
+                    </div>
+                {% else %}
+                    <img src="{{ url_for('static', filename='uploads/' + projeto.image_filename) }}" class="img-fluid rounded shadow">
+                {% endif %}
+            </div>
+            
+            <div class="col-md-4">
+                <h1 class="display-4">{{ projeto.title }}</h1>
+                <hr>
+                <p class="lead">{{ projeto.description }}</p>
+                <div class="badge bg-info text-dark">{{ projeto.category }}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

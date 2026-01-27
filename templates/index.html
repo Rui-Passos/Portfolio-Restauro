@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inês Sambado | Conservação e Restauro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+ <header>
+        <nav>
+            <div class="logo">C&R</div>
+            <ul>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#curriculo">Formação</a></li> <li><a href="#portfolio">Portfólio</a></li> 
+                <li><a href="#contactos">Contacto</a></li> 
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Inês Sambado</h1>
+            <p>Conservação e Restauro: Preservar a História, Restaurar a Alma.</p>
+            <div style="margin-top: 30px;">
+                <a href="#portfolio" class="btn-contacto" style="border: 2px solid white; background: transparent; color: white; text-decoration: none; padding: 10px 20px;">Ver Portfólio</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="sobre">
+        <div class="container">
+            <h2>Sobre Mim</h2>
+            <p>{{ info.sobre_mim }}</p>
+        </div>
+    </section>
+
+<section id="portfolio" style="padding: 100px 0; background-color: #ffffff;">
+    <div class="container">
+        <h2 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 40px;">Portfólio</h2>
+        
+        <div id="portfolioCarousel" class="carousel slide shadow-lg" data-bs-ride="carousel" style="border-radius: 15px; overflow: hidden;">
+            <div class="carousel-inner">
+                {% for trabalho in trabalhos %}
+                    <div class="carousel-item {{ 'active' if loop.first else '' }}">
+                        <a href="{{ url_for('projeto_detalhe', id=trabalho.id) }}">
+                            <img src="{{ url_for('static', filename='uploads/' + trabalho.image_filename) }}" 
+                                class="d-block w-100" 
+                                style="height: 550px; object-fit: cover;">
+                        </a>
+                        <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.6); border-radius: 10px; padding: 15px; bottom: 30px;">
+                            <h5 style="font-size: 1.5rem;">{{ trabalho.title }}</h5>
+                            <p>{{ trabalho.description[:100] }}...</p>
+                            <a href="{{ url_for('projeto_detalhe', id=trabalho.id) }}" class="btn btn-sm btn-light">
+                                Ver Detalhes e Vídeo ↗
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<section id="curriculo">
+    <div class="container">
+        <h2>Formação & Experiência</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2009 - 2024</div>
+                <div class="timeline-content">
+                    <h3>Licenciatura em Conservação e Restauro</h3>
+                    <p>Faculdade de Ciências e Tecnologia da Universidade NOVA de Lisboa</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2018 - 2021</div>
+                <div class="timeline-content">
+                    <h3>Licenciatura em Artes</h3>
+                    <p>Faculdade de Belas Artes - Foco em preservação de património móvel.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contactos" style="padding: 80px 0; background: #fdfcf9; text-align: center; border-top: 1px solid #eee;">
+    <div class="container">
+        <h2 style="font-family: 'Playfair Display', serif;">Contactos</h2>
+        <p style="margin-bottom: 10px;">Para orçamentos ou parcerias:</p>
+        <p><strong>Email:</strong> <a href="mailto:{{ info.email }}" style="color: #8b795e;">{{ info.email }}</a></p>
+        
+        <p style="margin-top: 15px;">
+            <strong>LinkedIn:</strong> 
+            <a href="{{ info.linkedin }}" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               style="color: #0077b5; text-decoration: none; font-weight: bold;">
+               Ver Perfil Profissional ↗
+            </a>
+        </p>
+    </div>
+</section>
+
+    <footer>
+        <p>&copy; 2026 Inês Sambado - Conservação e Restauro</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

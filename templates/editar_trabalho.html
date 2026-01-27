@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Trabalho</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="padding: 50px; background-color: #f9f7f2;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <h2>Editar Trabalho</h2>
+        <form method="POST">
+            <label>Título:</label>
+            <input type="text" name="titulo" value="{{ trabalho.titulo }}" required style="width: 100%; padding: 10px; margin-bottom: 20px;">
+
+            <label>Descrição:</label>
+            <textarea name="descricao" required style="width: 100%; padding: 10px; height: 150px; margin-bottom: 20px;">{{ trabalho.descricao }}</textarea>
+
+            <button type="submit" style="background: #8b795e; color: white; padding: 12px; border: none; cursor: pointer; width: 100%; border-radius: 4px;">Gravar Alterações</button>
+            <a href="{{ url_for('admin') }}" style="display: block; text-align: center; margin-top: 15px; color: #999;">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>
