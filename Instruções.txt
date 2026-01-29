@@ -1,0 +1,76 @@
+🎨 Guia de Gestão: Portfolio de Restauro
+Olá Inês! O teu site já está online e pronto a ser atualizado. Aqui tens os passos simples para gerires o teu portfólio:
+
+1. Como entrar no Painel de Controlo
+Endereço: ruipassos.pythonanywhere.com/admin
+
+Login: Introduz o teu utilizador e a password que definimos.
+
+2. Adicionar um Novo Trabalho
+No topo do painel, tens o formulário "Adicionar Novo Projeto":
+
+Escreve o Título do projeto.
+
+Escreve a Descrição (detalhes da intervenção, materiais, etc.).
+
+Clica em "Escolher Ficheiro" para carregar a foto.
+
+Clica no botão castanho "Gravar Projeto". O trabalho aparecerá automaticamente no site principal.
+
+3. Editar ou Apagar Projetos
+Na lista em baixo ("Gerir Projetos Existentes"):
+
+Botão EDITAR: Permite corrigir o texto de um projeto que já foi publicado.
+
+Botão APAGAR: Remove o projeto do site permanentemente (pede confirmação para não haver acidentes).
+
+4. Editar Contactos e Biografia
+No botão verde no topo (⚙️ Editar Perfil e Contactos), podes atualizar:
+
+O teu texto de apresentação ("Sobre Mim").
+
+O teu e-mail de contacto.
+
+O link para o teu LinkedIn.
+
+⚠️ Dicas Importantes para Fotos:
+Tamanho: Tenta usar fotos que não sejam demasiado pesadas (idealmente menos de 2MB) para o site carregar rápido em telemóveis.
+
+Formato: O sistema aceita JPG, PNG e GIF.
+
+-----------------------------------------------------------------------------------------------
+
+"Cartão de Memória" 
+com todos os acessos diretos para o projeto. Podes copiar e guardar nas tuas notas ou enviar para a Inês:
+
+🚀 Portefólio Inês - Acessos Rápidos
+Site Público: https://ruipassos.pythonanywhere.com
+
+Painel de Gestão (Admin): https://ruipassos.pythonanywhere.com/admin
+
+(Usa o utilizador e senha que definiste no ficheiro .env ou nas variáveis da aba Web).
+
+🛠️ Comandos de Atualização (Resumo)
+Sempre que mudares algo no VS Code, a sequência é:
+
+No terminal do Mac:
+
+Bash
+
+git add .
+git commit -m "Descrição da alteração"
+git push origin main
+No PythonAnywhere (Bash Console):
+
+Bash
+
+cd ~/mysite
+git pull  # Se der erro, usa: git reset --hard origin/main
+Na aba Web: Clicar no botão verde Reload.
+
+📂 Onde estão os dados?
+Imagens carregadas: Pasta /static/uploads no PythonAnywhere.
+
+Textos dos projetos: Ficheiro data.json no PythonAnywhere.
+
+Dica: Faz o download do data.json pela aba Files uma vez por semana para teres um backup dos textos da Inês.

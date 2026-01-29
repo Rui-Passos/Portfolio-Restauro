@@ -1,15 +1,38 @@
+# --- Python & Environment ---
 venv/
 __pycache__/
 *.pyc
+.env
+instance/
+.pytest_cache/
+
+# --- OS Specific ---
 .DS_Store
-*.zip
-*.save
-*.txt
-*.command
-Project1.py
+Thumbs.db
+
+# --- Database & Local Data (Very Important) ---
+portfolio.db
+data.json
+info.json
+*.db
+*.sqlite
+
+# --- User Uploads ---
+# Ignora as imagens enviadas mas mantém a pasta e o ficheiro .gitkeep (se existir)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# --- Cleanup: Personal Scripts & Drafts ---
+# Em vez de listar um a um, podes mover scripts de estudo para uma pasta /drafts 
+# ou simplesmente ignorar os que já não usas:
 main.py
 day6.py
-data.json
-migrar_dados.py
-criar_tabelas.py
-setup_db.py
+Project1.py
+*setup_db.py
+*migrar_dados.py
+*criar_tabelas.py
+
+# --- Others ---
+*.zip
+*.save
+*.command

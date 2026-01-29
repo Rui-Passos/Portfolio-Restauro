@@ -1,82 +1,51 @@
 import os
-import json
+from utils import carregar_info, guardar_info
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, abort
 from werkzeug.utils import secure_filename
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 
-# 1. Carregar variáveis de ambiente primeiro
+# --- 1. CONFIGURATION & ENV SETUP ---
 load_dotenv()
 
-# 2. Criar a APP 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
-# 3. Configuração da Base de Dados
+# Database Configuration
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'portfolio.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'portfolio.db'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# 4. Ligar a DB à APP
-db = SQLAlchemy(app) 
+# Upload Settings
+app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
+app.config['MAX_CONTENT_LENGTH'] = 16 * \
+    1024 * 1024  # Limit upload size to 16MB
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-# 5. Definir o Modelo
+db = SQLAlchemy(app)
+
+# Ensure upload directory exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# --- 2. MODELS ---
+
+
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     image_filename = db.Column(db.String(100), nullable=False)
     video_url = db.Column(db.String(200), nullable=True)
-    category = db.Column(db.String(50), nullable=True)
+    category = db.Column(db.String(50), default='General')
 
-# --- CONFIGURAÇÕES RESTANTES (Remove a segunda linha app = Flask(__name__)) ---
-ADMIN_USER = os.getenv('ADMIN_USER')
-ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+    def __repr__(self):
+        return f'<Project {self.title}>'
 
-# Configurações de Upload
-UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# --- 3. HELPERS ---
 
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
 
-# --- FUNÇÕES DE SUPORTE (BACKEND ROBUSTO) ---
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def carregar_dados():
-    try:
-        with open('data.json', 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
-
-def guardar_dados(dados):
-    with open('data.json', 'w', encoding='utf-8') as f:
-        json.dump(dados, f, indent=4, ensure_ascii=False)
-
-def carregar_info():
-    default_info = {
-        "sobre_mim": "Biografia a ser editada...",
-        "email": "ines@exemplo.com",
-        "linkedin": "https://linkedin.com/"
-    }
-    try:
-        if os.path.exists('info.json'):
-            with open('info.json', 'r', encoding='utf-8') as f:
-                dados = json.load(f)
-                # Garante que chaves novas existem no dicionário
-                for k, v in default_info.items():
-                    dados.setdefault(k, v)
-                return dados
-        return default_info
-    except Exception:
-        return default_info
-
-# --- MIDDLEWARE ---
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -85,23 +54,32 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# --- ROTAS ---
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# --- 4. ROUTES ---
+
 
 @app.route('/')
 def home():
-    info = carregar_info() 
-    # Em vez de carregar_dados(), usamos a Query do SQLAlchemy:
-    trabalhos = Project.query.all() 
+    # Keep using your info.json for the bio/contacts for now
+    # Move JSON logic to a separate util file if possible
+    from utils import carregar_info
+    info = carregar_info()
+    trabalhos = Project.query.order_by(Project.id.desc()).all()
     return render_template('index.html', info=info, trabalhos=trabalhos)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        if request.form['username'] == ADMIN_USER and request.form['password'] == ADMIN_PASSWORD:
+        if request.form['username'] == os.getenv('ADMIN_USER') and \
+           request.form['password'] == os.getenv('ADMIN_PASSWORD'):
             session['logged_in'] = True
             return redirect(url_for('admin'))
-        return render_template('login.html', erro="Credenciais inválidas!")
+        return render_template('login.html', erro="Invalid Credentials!")
     return render_template('login.html')
 
 
@@ -114,35 +92,54 @@ def logout():
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
-    # Carrega todos os projetos da base de dados (ordenados pelo ID mais recente)
     trabalhos = Project.query.order_by(Project.id.desc()).all()
-    
-    if request.method == 'POST':
-        titulo = request.form.get('titulo')
-        descricao = request.form.get('descricao')
-        video_url = request.form.get('video_url') # Novo campo
-        categoria = request.form.get('categoria', 'Geral')
-        file = request.files.get('imagem')
 
-        if titulo and descricao and file and allowed_file(file.filename):
+    if request.method == 'POST':
+        file = request.files.get('imagem')
+        titulo = request.form.get('titulo')
+
+        if file and allowed_file(file.filename) and titulo:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
-            # Cria o novo objeto Project para a base de dados
+
             novo_projeto = Project(
                 title=titulo,
-                description=descricao,
+                description=request.form.get('descricao'),
                 image_filename=filename,
-                video_url=video_url,
-                category=categoria
+                video_url=request.form.get('video_url'),
+                category=request.form.get('categoria', 'General')
             )
-            
+
             db.session.add(novo_projeto)
-            db.session.commit() # Grava na base de dados
+            db.session.commit()
             return redirect(url_for('admin'))
-            
+
     return render_template('admin.html', trabalhos=trabalhos)
 
+
+@app.route('/eliminar/<int:id>', methods=['POST'])
+@login_required
+def eliminar(id):
+    projeto = Project.query.get_or_404(id)
+
+    # Securely delete the file
+    try:
+        caminho_img = os.path.join(
+            app.config['UPLOAD_FOLDER'], projeto.image_filename)
+        if os.path.exists(caminho_img):
+            os.remove(caminho_img)
+    except Exception as e:
+        print(f"Error deleting file: {e}")
+
+    db.session.delete(projeto)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+
+@app.route('/projeto/<int:id>')
+def projeto_detalhe(id):
+    projeto = Project.query.get_or_404(id)
+    return render_template('projecto.html', projeto=projeto)
 
 @app.route('/editar_info', methods=['GET', 'POST'])
 @login_required
@@ -153,35 +150,15 @@ def editar_info():
         info['email'] = request.form.get('email')
         info['linkedin'] = request.form.get('linkedin')
         
-        with open('info.json', 'w', encoding='utf-8') as f:
-            json.dump(info, f, indent=4, ensure_ascii=False)
-        return redirect(url_for('admin'))
+        if guardar_info(info):
+            return redirect(url_for('admin'))
+        else:
+            return "Erro ao guardar os dados", 500
+            
     return render_template('editar_info.html', info=info)
 
 
-@app.route('/eliminar/<int:id>', methods=['POST'])
-@login_required
-def eliminar(id):
-    # Procura o projeto na base de dados ou dá erro 404 se não existir
-    projeto = Project.query.get_or_404(id)
-    
-    # 1. Apagar o ficheiro da imagem da pasta uploads
-    caminho_img = os.path.join(app.config['UPLOAD_FOLDER'], projeto.image_filename)
-    if os.path.exists(caminho_img):
-        os.remove(caminho_img)
-    
-    # 2. Apagar o registo da base de dados
-    db.session.delete(projeto)
-    db.session.commit()
-    
-    return redirect(url_for('admin'))
-
-@app.route('/projeto/<int:id>')
-def projeto_detalhe(id):
-    projeto = Project.query.get_or_404(id)
-    # Mudança de 'projeto.html' para 'projecto.html'
-    return render_template('projecto.html', projeto=projeto)
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()  # Automatically creates the .db file if it doesn't exist
+    app.run(debug=True, port=5001)
