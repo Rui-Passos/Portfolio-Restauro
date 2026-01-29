@@ -4,23 +4,67 @@
     <meta charset="UTF-8">
     <title>Editar Perfil</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body style="padding: 50px; background-color: #f9f7f2;">
     <div style="max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
         <h2>⚙️ Editar Perfil e Contactos</h2>
         
-        <form method="POST">
-            <label><strong>Sobre Mim (Biografia):</strong></label>
-            <textarea name="sobre_mim" style="width: 100%; height: 200px; padding: 10px; margin-top: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px;">{{ info.sobre_mim }}</textarea>
+        <div class="admin-container">
+            <h1><i class="fas fa-user-cog"></i> Editar Perfil e Contactos</h1>
             
-            <label><strong>Email de Contacto:</strong></label>
-            <input type="email" name="email" value="{{ info.email }}" style="width: 100%; padding: 10px; margin-top: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px;">
-            
-            <label><strong>LinkedIn (URL completa):</strong></label>
-            <input type="url" name="linkedin" value="{{ info.linkedin }}" placeholder="https://www.linkedin.com/in/perfil" style="width: 100%; padding: 10px; margin-top: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px;">
-            
-            <button type="submit" style="background: #8b795e; color: white; padding: 12px 20px; border: none; cursor: pointer; width: 100%; border-radius: 4px; font-weight: bold;">Gravar Alterações</button>
-        </form>
+            <form method="POST" class="edit-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-signature"></i> Nome Profissional:</label>
+                        <input type="text" name="nome" value="{{ info.nome }}" placeholder="Ex: Inês Passos">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-briefcase"></i> Título Profissional:</label>
+                        <input type="text" name="titulo" value="{{ info.titulo }}" placeholder="Ex: Conservadora-Restauradora">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-address-card"></i> Biografia Curta:</label>
+                    <textarea name="sobre_mim" rows="5">{{ info.sobre_mim }}</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-tools"></i> Especialidades:</label>
+                        <input type="text" name="especialidades" value="{{ info.especialidades }}" placeholder="Pintura, Talha, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-graduation-cap"></i> Formação:</label>
+                        <input type="text" name="formacao" value="{{ info.formacao }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email:</label>
+                        <input type="email" name="email" value="{{ info.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fab fa-linkedin"></i> LinkedIn (URL):</label>
+                        <input type="url" name="linkedin" value="{{ info.linkedin }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fab fa-instagram"></i> Instagram (URL):</label>
+                        <input type="url" name="instagram" value="{{ info.instagram }}">
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn-save"><i class="fas fa-save"></i> Guardar Alterações</button>
+                    <a href="{{ url_for('admin') }}" class="btn-back"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+                </div>
+            </form>
+        </div>
         
         <p style="text-align: center; margin-top: 20px;"><a href="/admin" style="color: #666;">← Voltar ao Painel</a></p>
     </div>

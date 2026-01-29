@@ -5,14 +5,15 @@ import os
 INFO_FILE = 'info.json'
 
 def carregar_info():
-    """
-    Carrega as informações do perfil (biografia, email, linkedin) do ficheiro JSON.
-    Se o ficheiro não existir, retorna valores por defeito.
-    """
     default_info = {
+        "nome": "Inês",
+        "titulo": "Conservadora-Restauradora",
         "sobre_mim": "Biografia a ser editada...",
+        "especialidades": "Pintura, Talha, Mobiliário",
+        "formacao": "Licenciatura em Conservação e Restauro",
         "email": "exemplo@email.com",
-        "linkedin": "https://linkedin.com/"
+        "linkedin": "https://linkedin.com/",
+        "instagram": "https://instagram.com/"
     }
     
     try:

@@ -146,15 +146,14 @@ def projeto_detalhe(id):
 def editar_info():
     info = carregar_info()
     if request.method == 'POST':
-        info['sobre_mim'] = request.form.get('sobre_mim')
-        info['email'] = request.form.get('email')
-        info['linkedin'] = request.form.get('linkedin')
+        # Lista de campos para atualizar automaticamente
+        campos = ['nome', 'titulo', 'sobre_mim', 'especialidades', 'formacao', 'email', 'linkedin', 'instagram']
+        
+        for campo in campos:
+            info[campo] = request.form.get(campo)
         
         if guardar_info(info):
             return redirect(url_for('admin'))
-        else:
-            return "Erro ao guardar os dados", 500
-            
     return render_template('editar_info.html', info=info)
 
 

@@ -214,3 +214,182 @@ h2 {
     transition: 0.3s;
     cursor: pointer;
 }
+
+.admin-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #1e1e1e; /* Um cinza muito escuro profissional */
+        color: #f0f0f0;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .edit-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 280px;
+    }
+
+    .full-width {
+        flex: 100%;
+    }
+
+    /* 2. Estilo dos Labels e Ícones */
+    label {
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #d19a66; /* Tom bronze/ouro */
+    }
+
+    label i {
+        margin-right: 8px;
+        width: 20px;
+        text-align: center;
+    }
+
+    /* 3. Estilo dos Campos de Entrada */
+    input, textarea {
+        padding: 12px;
+        background: #2d2d2d;
+        border: 1px solid #444;
+        color: #fff;
+        border-radius: 6px;
+        transition: border 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+        border-color: #d19a66;
+        outline: none;
+        background: #333;
+    }
+
+    /* 4. Botões e Ações */
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    .btn-save {
+        background: #28a745;
+        color: white;
+        padding: 14px 25px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.3s;
+    }
+
+    .btn-save:hover {
+        background: #218838;
+    }
+
+    .btn-back {
+        color: #888;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+    }
+
+    .btn-back:hover {
+        color: #fff;
+    }
+
+    .about-container {
+    padding: 80px 10%;
+    background: #f9f9f9; /* Ou a cor do teu site */
+    color: #333;
+}
+
+.profession-title {
+    color: #d19a66;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.detail-item i {
+    color: #d19a66;
+    margin-right: 10px;
+}
+
+.social-links {
+    margin-top: 20px;
+    display: flex;
+    gap: 25px;
+}
+
+.social-links a {
+    color: #d19a66; /* Cor bronze/ouro */
+    font-size: 2rem; /* Aumenta o tamanho para 32px */
+    transition: transform 0.3s ease;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    transform: scale(1.2); /* Efeito de zoom ao passar o rato */
+    color: #333;
+}
+
+footer {
+    background: #1a1a1a;
+    color: #888;
+    padding: 40px 0;
+    text-align: center;
+    border-top: 1px solid #333;
+}
+
+.footer-content p {
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.footer-socials {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.footer-socials a {
+    color: #888;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.footer-socials a:hover {
+    color: #d19a66; /* O tom bronze que estamos a usar */
+}
+
+.footer-dev {
+    font-size: 0.7rem !important;
+    opacity: 0.5;
+    text-transform: uppercase;
+}
