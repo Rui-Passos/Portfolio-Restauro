@@ -32,10 +32,9 @@
 
                 <label style="display: block; margin-bottom: 5px;">Categoria do Trabalho:</label>
                 <select name="categoria" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; background: white;">
-                    <option value="Geral">Restauro Geral</option>
-                    <option value="Mobiliario">Mobiliário</option>
-                    <option value="Pintura">Pintura</option>
-                    <option value="Video">Documentação em Vídeo</option>
+                    {% for cat in categorias %}
+                        <option value="{{ cat }}">{{ cat }}</option>
+                    {% endfor %}
                 </select>
 
                 <label style="display: block; margin-bottom: 5px;">Foto Principal (Thumbnail):</label>
@@ -44,6 +43,7 @@
                 <button type="submit" style="background: #8b795e; color: white; padding: 12px; border: none; cursor: pointer; width: 100%; border-radius: 4px; font-weight: bold;">Gravar Projeto</button>
             </form>
         </section>
+
 
         <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
 

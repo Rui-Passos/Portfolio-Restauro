@@ -6,6 +6,8 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 
+CATEGORIAS = ["Pintura", "Escultura", "Mobiliário", "Fotografia", "Papel", "Outros"]
+
 # --- 1. CONFIGURATION & ENV SETUP ---
 load_dotenv()
 
@@ -107,14 +109,16 @@ def admin():
                 description=request.form.get('descricao'),
                 image_filename=filename,
                 video_url=request.form.get('video_url'),
-                category=request.form.get('categoria', 'General')
+                # Aqui ele pega o valor selecionado no dropdown
+                category=request.form.get('categoria', 'Outros') 
             )
 
             db.session.add(novo_projeto)
             db.session.commit()
             return redirect(url_for('admin'))
 
-    return render_template('admin.html', trabalhos=trabalhos)
+    # ADICIONAMOS 'categorias=CATEGORIAS' no final desta linha:
+    return render_template('admin.html', trabalhos=trabalhos, categorias=CATEGORIAS)
 
 
 @app.route('/eliminar/<int:id>', methods=['POST'])
@@ -155,6 +159,7 @@ def editar_info():
         if guardar_info(info):
             return redirect(url_for('admin'))
     return render_template('editar_info.html', info=info)
+
 
 
 if __name__ == '__main__':
