@@ -15,8 +15,9 @@
         <div class="logo">Conservação e Restauro</div>
         <ul>
             <li><a href="#sobre">Sobre</a></li>
-            <li><a href="#curriculo">Formação</a></li> <li><a href="#portfolio">Portfólio</a></li> 
-            <li><a href="#contacto">Contacto</a></li> 
+            <li><a href="#curriculo">Formação</a></li> 
+            <li><a href="#portfolio">Portfólio</a></li> 
+            <li><a href="#contactos">Contacto</a></li> 
         </ul>
     </nav>
 </header>
@@ -64,92 +65,79 @@
                     {% if info.instagram %}
                     <a href="{{ info.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
                     {% endif %}
-                    
                     {% if info.linkedin %}
                     <a href="{{ info.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
                     {% endif %}
-                    
                     <a href="mailto:{{ info.email }}"><i class="fas fa-envelope"></i></a>
+                </div>
             </div>
-            
         </div>
     </section>
 
-<section id="curriculo">
-    <div class="container">
-        <h2>Formação & Experiência</h2>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-date">2009 - 2024</div>
-                <div class="timeline-content">
-                    <h3>Licenciatura em Conservação e Restauro</h3>
-                    <p>Faculdade de Ciências e Tecnologia da Universidade NOVA de Lisboa</p>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-date">2018 - 2021</div>
-                <div class="timeline-content">
-                    <h3>Licenciatura em Artes</h3>
-                    <p>Faculdade de Belas Artes - Foco em preservação de património móvel.</p>
+    <section id="curriculo">
+        <div class="container">
+            <h2>Formação & Experiência</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2009 - 2024</div>
+                    <div class="timeline-content">
+                        <h3>Licenciatura em Conservação e Restauro</h3>
+                        <p>Faculdade de Ciências e Tecnologia da Universidade NOVA de Lisboa</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section id="portfolio" style="padding: 100px 0; background-color: #ffffff;">
-    <div class="container">
-        <h2 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 40px;">Portfólio</h2>
-        
-        <div id="portfolioCarousel" class="carousel slide shadow-lg" data-bs-ride="carousel" style="border-radius: 15px; overflow: hidden;">
-            <div class="carousel-inner">
+    <section id="portfolio" style="padding: 100px 0; background-color: #ffffff;">
+        <div class="container">
+            <h2 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 40px;">Portfólio</h2>
+            
+            <div class="category-filters text-center mb-5">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                {% for cat in categorias %}
+                    <button class="filter-btn" data-filter="{{ cat }}">{{ cat }}</button>
+                {% endfor %}
+            </div>
+
+            <div class="row" id="portfolio-grid">
                 {% for trabalho in trabalhos %}
-                    <div class="carousel-item {{ 'active' if loop.first else '' }}">
-                        <a href="{{ url_for('projeto_detalhe', id=trabalho.id) }}">
-                            <img src="{{ url_for('static', filename='uploads/' + trabalho.image_filename) }}" 
-                                class="d-block w-100" 
-                                style="height: 550px; object-fit: cover;">
-                        </a>
-                        <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.6); border-radius: 10px; padding: 15px; bottom: 30px;">
-                            <h5 style="font-size: 1.5rem;">{{ trabalho.title }}</h5>
-                            <p>{{ trabalho.description[:100] }}...</p>
-                            <a href="{{ url_for('projeto_detalhe', id=trabalho.id) }}" class="btn btn-sm btn-light">
-                                Ver Detalhes e Vídeo ↗
+                    <div class="col-md-4 mb-4 project-item" data-category="{{ trabalho.category }}">
+                        <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden; transition: transform 0.3s;">
+                            <a href="{{ url_for('projeto_detalhe', id=trabalho.id) }}">
+                                <img src="{{ url_for('static', filename='uploads/' + trabalho.image_filename) }}" 
+                                     class="card-img-top" 
+                                     style="height: 250px; object-fit: cover;"
+                                     alt="{{ trabalho.title }}">
                             </a>
+                            <div class="card-body text-center">
+                                <h5 class="card-title" style="font-family: 'Playfair Display', serif;">{{ trabalho.title }}</h5>
+                                <p class="card-text text-muted small">{{ trabalho.category }}</p>
+                                <a href="{{ url_for('projeto_detalhe', id=trabalho.id) }}" class="btn btn-sm btn-outline-secondary">
+                                    Ver Detalhes ↗
+                                </a>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
         </div>
-    </div>
-</section>
+    </section>
 
-<section id="contactos" style="padding: 80px 0; background: #fdfcf9; text-align: center; border-top: 1px solid #eee;">
-    <div class="container">
-        <h2 style="font-family: 'Playfair Display', serif;">Contactos</h2>
-        <p style="margin-bottom: 10px;">Para orçamentos ou parcerias:</p>
-        <p><strong>Email:</strong> <a href="mailto:{{ info.email }}" style="color: #8b795e;">{{ info.email }}</a></p>
-        
-        <p style="margin-top: 15px;">
-            <strong>LinkedIn:</strong> 
-            <a href="{{ info.linkedin }}" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               style="color: #0077b5; text-decoration: none; font-weight: bold;">
-               Ver Perfil Profissional ↗
-            </a>
-        </p>
-    </div>
-</section>
+    <section id="contactos" style="padding: 80px 0; background: #fdfcf9; text-align: center; border-top: 1px solid #eee;">
+        <div class="container">
+            <h2 style="font-family: 'Playfair Display', serif;">Contactos</h2>
+            <p style="margin-bottom: 10px;">Para orçamentos ou parcerias:</p>
+            <p><strong>Email:</strong> <a href="mailto:{{ info.email }}" style="color: #8b795e;">{{ info.email }}</a></p>
+            <p style="margin-top: 15px;">
+                <strong>LinkedIn:</strong> 
+                <a href="{{ info.linkedin }}" target="_blank" rel="noopener noreferrer" style="color: #0077b5; text-decoration: none; font-weight: bold;">
+                   Ver Perfil Profissional ↗
+                </a>
+            </p>
+        </div>
+    </section>
 
     <footer>
         <div class="footer-content">
@@ -167,7 +155,38 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    document.querySelectorAll('.filter-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.getAttribute('data-filter');
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            const items = document.querySelectorAll('.project-item');
+            
+            items.forEach(item => {
+                // Inicia o fade out
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                        // Força um pequeno reflow para a animação de entrada funcionar
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 50);
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }, 300); 
+            });
+        });
+    });
+    </script>
 </body>
 </html>

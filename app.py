@@ -66,12 +66,10 @@ def allowed_file(filename):
 
 @app.route('/')
 def home():
-    # Keep using your info.json for the bio/contacts for now
-    # Move JSON logic to a separate util file if possible
     from utils import carregar_info
     info = carregar_info()
     trabalhos = Project.query.order_by(Project.id.desc()).all()
-    return render_template('index.html', info=info, trabalhos=trabalhos)
+    return render_template('index.html', info=info, trabalhos=trabalhos, categorias=CATEGORIAS)
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -428,3 +428,48 @@ footer {
 .btn-cv:active {
     transform: translateY(0);
 }
+
+/* Botões bronze no filto de categorias */
+.filter-btn {
+    background: transparent;
+    border: 1px solid #8b795e;
+    color: #8b795e;
+    padding: 8px 20px;
+    margin: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: #8b795e;
+    color: white;
+}
+
+/* Botões de Filtro */
+.category-filters {
+    margin-bottom: 40px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #8b795e;
+    color: #8b795e;
+    padding: 8px 22px;
+    margin: 5px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: #8b795e;
+    color: white;
+    box-shadow: 0 4px 10px rgba(139, 121, 94, 0.3);
+}
+
+/* Transição para os itens do portfólio */
+.project-item {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
