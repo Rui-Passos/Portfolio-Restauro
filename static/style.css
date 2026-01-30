@@ -393,3 +393,38 @@ footer {
     opacity: 0.5;
     text-transform: uppercase;
 }
+
+/* 9. BOTÃO CV */
+/* Estilo para o Botão do CV */
+.btn-cv {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #8b795e; /* Bronze base */
+    color: #ffffff !important;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-cv i {
+    font-size: 1.1rem;
+}
+
+.btn-cv:hover {
+    background-color: #a69275; /* Bronze mais claro ao passar o rato */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    color: #ffffff;
+}
+
+.btn-cv:active {
+    transform: translateY(0);
+}

@@ -24,7 +24,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * \
     1024 * 1024  # Limit upload size to 16MB
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
 
 db = SQLAlchemy(app)
 
@@ -150,14 +150,29 @@ def projeto_detalhe(id):
 def editar_info():
     info = carregar_info()
     if request.method == 'POST':
-        # Lista de campos para atualizar automaticamente
+        # 1. Atualizar campos de texto
         campos = ['nome', 'titulo', 'sobre_mim', 'especialidades', 'formacao', 'email', 'linkedin', 'instagram']
-        
         for campo in campos:
             info[campo] = request.form.get(campo)
         
+        # 2. Lógica para o PDF do Currículo
+        if 'cv_file' in request.files:
+            file = request.files['cv_file']
+            if file and file.filename != '':
+                if file.filename.lower().endswith('.pdf'):
+                    # Usamos um nome fixo para o CV para evitar acumular ficheiros velhos
+                    filename = "curriculo_ines_sambado.pdf"
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    info['cv_path'] = filename # Guarda o nome no info.json
+                else:
+                    # Opcional: podias passar uma mensagem de erro aqui se não for PDF
+                    "O ficheiro do CV deve ser um PDF."
+                    pass 
+
+        # 3. Guardar tudo no info.json
         if guardar_info(info):
             return redirect(url_for('admin'))
+            
     return render_template('editar_info.html', info=info)
 
 
