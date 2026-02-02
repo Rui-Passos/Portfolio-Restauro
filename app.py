@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, a
 from werkzeug.utils import secure_filename
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 
 
@@ -35,13 +35,13 @@ db = SQLAlchemy(app)
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'inessambado@gmail.com'
-app.config['MAIL_PASSWORD'] = 'Restauro2026!' # Password de app gerada no Gmail
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USERNAME'] = 'inessambado@gmail.com'
+# app.config['MAIL_PASSWORD'] = 'Restauro2026!' # Password de app gerada no Gmail
 
-mail = Mail(app)
+# mail = Mail(app)
 s = URLSafeTimedSerializer(app.secret_key)
 
 
@@ -230,17 +230,16 @@ def reset_token(token):
 # Só tu saberás que este link existe
 @app.route('/force-reset-admin-99') 
 def force_reset():
-    # Carregamos a info atual
     from utils import carregar_info, guardar_info
     info = carregar_info()
     
-    # Definimos uma password temporária
-    # Se usares hash de password, aqui devias gerar o hash
-    info['password'] = 'Restauro2026!' 
+    # Lê do .env. Se não encontrar, usa uma genérica (ou vice-versa)
+    nova_pass = os.getenv('EMERGENCY_RESET_PASSWORD', 'Restauro2026!!') 
+    info['password'] = nova_pass
     
     if guardar_info(info):
-        return "✅ Password de Admin resetada para: Restauro2026! Altere-a assim que fizer login."
-    return "❌ Erro ao tentar fazer o reset."
+        return f"✅ Password resetada com sucesso para o valor definido no sistema."
+    return "❌ Erro ao guardar."
 
 
 if __name__ == '__main__':
