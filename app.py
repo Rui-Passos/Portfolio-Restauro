@@ -88,19 +88,22 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # 1. Carregamos os dados reais do ficheiro info.json
         from utils import carregar_info
         info = carregar_info()
         
-        # 2. Comparamos com o que o utilizador escreveu no formulário
-        # O username agora é o que estiver no campo 'nome' do info.json (ines)
-        if request.form['username'] == info.get('nome') and \
-           request.form['password'] == info.get('password'):
+        # Compara removendo espaços e ignorando maiúsculas no nome
+        user_enviado = request.form.get('username', '').strip().lower()
+        pass_enviada = request.form.get('password', '').strip()
+        
+        user_correto = info.get('nome', '').strip().lower()
+        pass_correta = info.get('password', '').strip()
+        
+        if user_enviado == user_correto and pass_enviada == pass_correta:
             session['logged_in'] = True
             return redirect(url_for('admin'))
         
-        # Se falhar, avisa
-        return "Utilizador ou Password incorretos!"
+        # Mensagem padrão de erro para o utilizador
+        return render_template('login.html', erro="Utilizador ou Password incorretos!")
         
     return render_template('login.html')
 
