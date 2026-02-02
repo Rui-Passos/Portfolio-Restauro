@@ -88,11 +88,20 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        if request.form['username'] == os.getenv('ADMIN_USER') and \
-           request.form['password'] == os.getenv('ADMIN_PASSWORD'):
+        # 1. Carregamos os dados reais do ficheiro info.json
+        from utils import carregar_info
+        info = carregar_info()
+        
+        # 2. Comparamos com o que o utilizador escreveu no formulário
+        # O username agora é o que estiver no campo 'nome' do info.json (ines)
+        if request.form['username'] == info.get('nome') and \
+           request.form['password'] == info.get('password'):
             session['logged_in'] = True
             return redirect(url_for('admin'))
-        return render_template('login.html', erro="Invalid Credentials!")
+        
+        # Se falhar, avisa
+        return "Utilizador ou Password incorretos!"
+        
     return render_template('login.html')
 
 
@@ -188,6 +197,8 @@ def editar_info():
         # 3. Guardar tudo no info.json
         if guardar_info(info):
             return redirect(url_for('admin'))
+        else:
+            return "Erro crítico: Não foi possível escrever no ficheiro info.json. Verifique as permissões no servidor."
             
     return render_template('editar_info.html', info=info)
 
