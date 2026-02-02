@@ -5,7 +5,11 @@ from flask import Flask, render_template, request, redirect, url_for, session, a
 from werkzeug.utils import secure_filename
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 
+
+# Define categorias de projetos
 CATEGORIAS = ["Pintura", "Escultura", "Mobiliário", "Fotografia", "Papel", "Outros"]
 
 # --- 1. CONFIGURATION & ENV SETUP ---
@@ -31,8 +35,17 @@ db = SQLAlchemy(app)
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# --- 2. MODELS ---
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'inessambado@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Restauro2026!' # Password de app gerada no Gmail
 
+mail = Mail(app)
+s = URLSafeTimedSerializer(app.secret_key)
+
+
+# --- 2. MODELS ---
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -167,12 +180,67 @@ def editar_info():
                     "O ficheiro do CV deve ser um PDF."
                     pass 
 
+        # 2.1 Atualizar password se fornecida
+        nova_pass = request.form.get('nova_password')
+        if nova_pass and nova_pass.strip() != "":
+            info['password'] = nova_pass.strip()
+
         # 3. Guardar tudo no info.json
         if guardar_info(info):
             return redirect(url_for('admin'))
             
     return render_template('editar_info.html', info=info)
 
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        info = carregar_info()
+        
+        if email == info.get('email'):
+            token = s.dumps(email, salt='password-reset-salt')
+            link = url_for('reset_token', token=token, _external=True)
+            
+            msg = Message('Recuperação de Password - Portfólio',
+                          sender='o-teu-email@gmail.com',
+                          recipients=[email])
+            msg.body = f'Para redefinir a sua password, clique no link: {link}'
+            mail.send(msg)
+            return "Verifique o seu email para o link de recuperação."
+            
+    return render_template('reset_request.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    try:
+        # O token expira em 1800 segundos (30 minutos)
+        email = s.loads(token, salt='password-reset-salt', max_age=1800)
+    except:
+        return 'O link de recuperação expirou ou é inválido.'
+
+    if request.method == 'POST':
+        nova_pass = request.form.get('password')
+        # Aqui deves guardar a nova password no teu ficheiro de config ou BD
+        # Se usares hash, lembra-te de encriptar!
+        return redirect(url_for('login'))
+
+    return render_template('reset_token.html')
+
+# ROTA SECRETA PARA EMERGÊNCIA
+# Só tu saberás que este link existe
+@app.route('/force-reset-admin-99') 
+def force_reset():
+    # Carregamos a info atual
+    from utils import carregar_info, guardar_info
+    info = carregar_info()
+    
+    # Definimos uma password temporária
+    # Se usares hash de password, aqui devias gerar o hash
+    info['password'] = 'Restauro2026!' 
+    
+    if guardar_info(info):
+        return "✅ Password de Admin resetada para: Restauro2026! Altere-a assim que fizer login."
+    return "❌ Erro ao tentar fazer o reset."
 
 
 if __name__ == '__main__':
