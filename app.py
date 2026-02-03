@@ -256,6 +256,29 @@ def force_reset():
     return "❌ Erro ao guardar."
 
 
+@app.route('/editar_projeto/<int:id>', methods=['GET', 'POST'])
+@login_required
+def editar_projeto(id):
+    projeto = Project.query.get_or_404(id) # No teu Model é Project
+    categorias = CATEGORIAS # Usa a lista global do topo do teu ficheiro
+
+    if request.method == 'POST':
+        projeto.title = request.form.get('titulo')
+        projeto.description = request.form.get('descricao')
+        projeto.category = request.form.get('categoria')
+        projeto.video_url = request.form.get('video_url')
+
+        file = request.files.get('imagem')
+        if file and file.filename != '':
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            projeto.image_filename = filename # O teu Model usa image_filename
+            
+        db.session.commit()
+        return redirect(url_for('admin'))
+
+    return render_template('editar_projeto.html', projeto=projeto, categorias=categorias)
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Automatically creates the .db file if it doesn't exist

@@ -60,7 +60,7 @@
                             
                             <div style="display: flex; gap: 10px;">
                                 <a href="{{ url_for('projeto_detalhe', id=trabalho.id) }}" target="_blank" class="btn btn-sm" style="background: #e0d8c3; text-decoration: none; color: #5a4d3a; padding: 5px 10px; border-radius: 4px; font-size: 0.8rem;">Ver no Site</a>
-                                
+                                <a href="{{ url_for('editar_projeto', id=trabalho.id) }}" class="btn btn-sm" style="background: #ffc107; text-decoration: none; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.8rem;">Editar</a>
                                 <form action="{{ url_for('eliminar', id=trabalho.id) }}" method="POST" onsubmit="return confirm('Apagar projeto?');" style="margin:0;">
                                     <button type="submit" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Apagar</button>
                                 </form>

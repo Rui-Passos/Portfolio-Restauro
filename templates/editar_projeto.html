@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Projeto - Inês Sambado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="padding: 50px; background-color: #f9f7f2;">
+
+    <div style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <h2 style="font-family: 'Playfair Display', serif;">Editar Projeto</h2>
+        <p style="color: #888;">A editar: <strong>{{ projeto.title }}</strong></p>
+
+        <section style="margin-top: 20px; padding: 20px; border: 1px solid #eee; border-radius: 8px; background-color: #fdfdfd;">
+            <form action="{{ url_for('editar_projeto', id=projeto.id) }}" method="POST" enctype="multipart/form-data">
+                
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Título do Projeto:</label>
+                <input type="text" name="titulo" value="{{ projeto.title }}" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px;">
+                
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Descrição da Intervenção:</label>
+                <textarea name="descricao" required 
+                          style="width: 100%; padding: 10px; margin-bottom: 20px; height: 150px; border: 1px solid #ddd; border-radius: 4px; font-family: sans-serif;">{{ projeto.description }}</textarea>
+                
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Link do Vídeo (Embed URL):</label>
+                <input type="text" name="video_url" value="{{ projeto.video_url if projeto.video_url else '' }}" 
+                       style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px;">
+
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Categoria:</label>
+                <select name="categoria" style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; background: white;">
+                    {% for cat in categorias %}
+                        <option value="{{ cat }}" {% if cat == projeto.category %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+
+                <div style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 5px;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">Imagem Atual:</label>
+                    {% if projeto.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' + projeto.image_filename) }}" alt="Thumbnail" style="width: 150px; border-radius: 4px; display: block; margin-bottom: 10px;">
+                    {% endif %}
+                    <label style="display: block; margin-bottom: 5px;">Substituir Foto (deixe vazio para manter a atual):</label>
+                    <input type="file" name="imagem" accept="image/*">
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button type="submit" style="flex: 2; background: #8b795e; color: white; padding: 12px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">Gravar Alterações</button>
+                    <a href="{{ url_for('admin') }}" style="flex: 1; text-align: center; background: #eee; color: #666; padding: 12px; border-radius: 4px; text-decoration: none; font-weight: bold;">Cancelar</a>
+                </div>
+            </form>
+        </section>
+    </div>
+
+</body>
+</html>
